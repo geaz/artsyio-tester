@@ -1,18 +1,18 @@
 {
   "files": {
-    "main.js": "/artseyio-tester/static/js/main.fdbbb3e8.chunk.js",
-    "main.js.map": "/artseyio-tester/static/js/main.fdbbb3e8.chunk.js.map",
+    "main.js": "/artseyio-tester/static/js/main.8f7d2b2f.chunk.js",
+    "main.js.map": "/artseyio-tester/static/js/main.8f7d2b2f.chunk.js.map",
     "runtime-main.js": "/artseyio-tester/static/js/runtime-main.17c602ee.js",
     "runtime-main.js.map": "/artseyio-tester/static/js/runtime-main.17c602ee.js.map",
-    "static/js/2.0e97b1af.chunk.js": "/artseyio-tester/static/js/2.0e97b1af.chunk.js",
-    "static/js/2.0e97b1af.chunk.js.map": "/artseyio-tester/static/js/2.0e97b1af.chunk.js.map",
+    "static/js/2.aa11edd2.chunk.js": "/artseyio-tester/static/js/2.aa11edd2.chunk.js",
+    "static/js/2.aa11edd2.chunk.js.map": "/artseyio-tester/static/js/2.aa11edd2.chunk.js.map",
     "index.html": "/artseyio-tester/index.html",
-    "static/js/2.0e97b1af.chunk.js.LICENSE.txt": "/artseyio-tester/static/js/2.0e97b1af.chunk.js.LICENSE.txt",
+    "static/js/2.aa11edd2.chunk.js.LICENSE.txt": "/artseyio-tester/static/js/2.aa11edd2.chunk.js.LICENSE.txt",
     "static/media/logo.ba7ca334.png": "/artseyio-tester/static/media/logo.ba7ca334.png"
   },
   "entrypoints": [
     "static/js/runtime-main.17c602ee.js",
-    "static/js/2.0e97b1af.chunk.js",
-    "static/js/main.fdbbb3e8.chunk.js"
+    "static/js/2.aa11edd2.chunk.js",
+    "static/js/main.8f7d2b2f.chunk.js"
   ]
 }
