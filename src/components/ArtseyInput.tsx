@@ -21,6 +21,9 @@ export const ArtseyInput: FC<ArtseyInputComponentProps> = (props: ArtseyInputCom
     const [caretPos, setCaretPos] = useState(0);
     const [wordList, setWordList] = useState<Array<string>>(randomWords(25));
     const [enteredKeys, setEnteredKeys] = useState<Array<string>>([]);
+
+    const [startTime, setStartTime] = useState<number>(0);
+    const [wpm, setWpm] = useState<number | null>(null);
     
     const getArtseyValue = useKeyMapper(props.keymap);
 
@@ -28,20 +31,9 @@ export const ArtseyInput: FC<ArtseyInputComponentProps> = (props: ArtseyInputCom
     useEffect(() => {
         const interval = setInterval(() => {
             if(keyQueue.length !== 0) {
-                let joinedWordList = wordList.join(" ");
-                let artsyKey = getArtseyValue(keyQueue);
-
-                if(artsyKey === "Backspace" && enteredKeys.length > 0) {
-                    setEnteredKeys(prev => [...prev.slice(0, prev.length - 1)]);
-                    setCaretPos(caretPos - 1);
-                }
-                else if(
-                    artsyKey !== undefined && artsyKey !== "Backspace"
-                    && ((joinedWordList.split("")[caretPos] === " " && artsyKey === "Space") || joinedWordList.split("")[caretPos] !== " ")
-                ) {
-                        setEnteredKeys(prev => [...prev, artsyKey as string]);
-                        setCaretPos(caretPos + 1);
-                }                
+                const artsyKey = getArtseyValue(keyQueue);
+                registerKey(artsyKey);
+                calculateWpm(artsyKey);           
                 setKeyQueue([]);
             }
         }, props.keyTimeout);
@@ -52,6 +44,8 @@ export const ArtseyInput: FC<ArtseyInputComponentProps> = (props: ArtseyInputCom
         setEnteredKeys([]);
         setKeyQueue([]);
         setCaretPos(0);
+        setStartTime(0);
+        setWpm(null);
         setWordList(randomWords(25));
         wordDivRef.current?.focus()
     }
@@ -83,13 +77,38 @@ export const ArtseyInput: FC<ArtseyInputComponentProps> = (props: ArtseyInputCom
         return words;
     }
 
+    const calculateWpm = (artsyKey: string | undefined): void => {
+        if(artsyKey !== undefined) {            
+            if(startTime === 0) setStartTime(new Date().getTime());
+            setWpm(Math.round(enteredKeys.length / 5 / ((new Date().getTime() - startTime) / 60000)));
+        }
+    }
+
+    const registerKey = (artsyKey: string | undefined): void => {
+        const joinedWordList = wordList.join(" ");
+        if(artsyKey === "Backspace" && enteredKeys.length > 0) {
+            setEnteredKeys(prev => [...prev.slice(0, prev.length - 1)]);
+            setCaretPos(caretPos - 1);
+        }
+        else if(
+            artsyKey !== undefined && artsyKey !== "Backspace"
+            && ((joinedWordList.split("")[caretPos] === " " && artsyKey === "Space") || joinedWordList.split("")[caretPos] !== " ")
+        ) {
+                setEnteredKeys(prev => [...prev, artsyKey as string]);
+                setCaretPos(caretPos + 1);
+        }   
+    }
+
     return (
         <StyledArtseyInput>
             <div id="word-list" tabIndex={0} onFocus={ () => setFocused(true) } onBlur={ () => setFocused(false) } onKeyUp={ onKeyUp } ref={ wordDivRef }>
                 { !isFocused && <div id="focus-message"><p>Focus Please</p></div> }
                 { generateWordListElements() }
             </div>
-            <small id="keycode-monitor">Last Registered: { enteredKeys.length !== 0 ? enteredKeys[enteredKeys.length - 1] : "NONE" }</small>
+            <div id="monitor">
+                <small id="keycode-monitor">Last Registered: { enteredKeys.length !== 0 ? enteredKeys[enteredKeys.length - 1] : "NONE" }</small>
+                <small id="wpm-monitor">WPM: { wpm !== null ? wpm : "NONE" }</small>
+            </div>
             <IconButton icon={faSync} onClick={ reset } ></IconButton>            
         </StyledArtseyInput>
     );
@@ -120,7 +139,12 @@ const StyledArtseyInput = styled.div`{}
         user-select: none; /* Standard */
     }
 
-    #keycode-monitor {
+    #monitor {
+        display: flex;
+        gap: 35px;
+    }
+
+    #keycode-monitor, #wpm-monitor {
         text-align: left;
         font-weight: bold;
         margin: 10px 0;
